@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Alerta de Calidad</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333333; margin: 0; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; border: 1px solid #ffcccc; padding: 20px; border-radius: 8px; background-color: #fff9f9;">
+        <h2 style="color: #d32f2f;">Alerta: Reporte de Calidad Registrado</h2>
+        <p>Estimado/a <span th:text="${managerName}">Manager</span>,</p>
+        <p>Se ha registrado un reporte de calidad crítico para el lote número: <strong><span th:text="${batchNumber}">LOTE-123</span></strong>.</p>
+        <div style="border-left: 4px solid #d32f2f; padding-left: 15px; margin: 15px 0;">
+            <p><strong>Detalle del reporte:</strong></p>
+            <p><strong>Título:</strong> <span th:text="${reportTitle}">Falla de Sellado</span></p>
+            <p><strong>Descripción:</strong> <span th:text="${reportDescription}">Detalle...</span></p>
+        </div>
+        <p>Por favor, ingrese al sistema para evaluar y tomar las acciones correctivas pertinentes.</p>
+        <br>
+        <p>Sistema de Alertas NutriTrack</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,421 @@
+{
+	"info": {
+		"_postman_id": "4b6c8a2d-1144-4828-98c4-c2c8d2345678",
+		"name": "NutriTrack API Collection",
+		"description": "Postman collection for NutriTrack - Food Traceability for Fitness (DBP Project 1)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"fitness_user\",\n  \"email\": \"user@example.com\",\n  \"password\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Admin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin_user\",\n  \"email\": \"admin@example.com\",\n  \"password\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.accessToken) {",
+									"    pm.environment.set(\"jwt_token\", jsonData.accessToken);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"fitness_user\",\n  \"password\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products & Batches",
+			"item": [
+				{
+					"name": "Create Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Whey Protein ISO\",\n  \"description\": \"Pure whey protein isolate for post-workout recovery\",\n  \"brand\": \"NutriUtec\",\n  \"category\": \"SUPPLEMENT\",\n  \"proteinPer100g\": 85.0,\n  \"carbsPer100g\": 3.5,\n  \"fatPer100g\": 1.0\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products?page=0&size=10&sort=name,asc",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								},
+								{
+									"key": "sort",
+									"value": "name,asc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Batch",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"batchNumber\": \"BATCH-WHEY-001\",\n  \"productionDate\": \"2026-05-15\",\n  \"expirationDate\": \"2027-05-15\",\n  \"status\": \"ACTIVE\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/1/batches",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"1",
+								"batches"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Traceability & Consumption",
+			"item": [
+				{
+					"name": "Get Batch Traceability",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/batches/1/traceability",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"batches",
+								"1",
+								"traceability"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Log Consumption",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"batchId\": 1,\n  \"quantityGrams\": 50,\n  \"consumptionDate\": \"2026-05-22T08:00:00Z\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/consumption",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"consumption"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Consumption History",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/consumption?page=0&size=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"consumption"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Quality Reports",
+			"item": [
+				{
+					"name": "Create Quality Report",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"batchId\": 1,\n  \"title\": \"Strong metallic odor\",\n  \"description\": \"Upon opening the batch package BATCH-WHEY-001, a strong and weird metallic smell was noticed. Not safe to consume.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/quality-reports",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"quality-reports"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Batch Reports",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/quality-reports/batch/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"quality-reports",
+								"batch",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>URGENTE: Retiro de Lote por Inocuidad</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333333; margin: 0; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; border: 2px solid #ff0000; padding: 20px; border-radius: 8px; background-color: #fff5f5;">
+        <h2 style="color: #ff0000; text-align: center;">ALERTA DE SEGURIDAD ALIMENTARIA URGENTE</h2>
+        <p>Estimado/a cliente,</p>
+        <p>Le escribimos para notificarle sobre un retiro del mercado por inocuidad alimentaria del siguiente lote que usted ha registrado consumir en su historial de consumo:</p>
+        <div style="background-color: #ffe6e6; border: 1px solid #ff9999; padding: 15px; border-radius: 4px; margin: 15px 0;">
+            <p style="margin: 5px 0;"><strong>Producto:</strong> <span th:text="${productName}">Proteína Premium</span></p>
+            <p style="margin: 5px 0;"><strong>Número de Lote:</strong> <span th:text="${batchNumber}">LOTE-XX</span></p>
+        </div>
+        <p><strong>RECOMENDACIÓN:</strong> Por favor, suspenda inmediatamente el consumo de cualquier producto que corresponda a este número de lote y deséchelo o devuélvalo al punto de venta.</p>
+        <p>Para mayor información o dudas de salud, póngase en contacto con nuestro servicio de atención al cliente.</p>
+        <br>
+        <p style="font-size: 0.9em; color: #666666;">NutriTrack Safe System - Trazabilidad y Transparencia.</p>
+    </div>
+</body>
+</html>
