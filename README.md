@@ -415,3 +415,4 @@ Este proyecto se distribuye bajo la licencia MIT. Consulta el archivo `LICENSE` 
 - *MapStruct Documentation:* https://mapstruct.org/documentation/stable/reference/html/
 - *ZXing (QR Generation):* https://github.com/zxing/zxing
 
+
