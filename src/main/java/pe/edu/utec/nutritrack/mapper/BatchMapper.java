@@ -17,5 +17,6 @@ public interface BatchMapper {
     @Mapping(target = "certificates", ignore = true)
     Batch toEntity(BatchRequest request);
 
+    @Mapping(target = "_links", ignore = true)
     BatchResponse toResponse(Batch batch);
 }

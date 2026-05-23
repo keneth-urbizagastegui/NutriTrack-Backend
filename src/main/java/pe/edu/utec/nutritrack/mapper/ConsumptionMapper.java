@@ -10,5 +10,6 @@ public interface ConsumptionMapper {
 
     @Mapping(target = "productName", source = "batch.product.name")
     @Mapping(target = "consumedMacros", ignore = true) // Calculated and set manually in service
+    @Mapping(target = "_links", ignore = true)
     ConsumptionResponse toResponse(ConsumptionLog log);
 }
