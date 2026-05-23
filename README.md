@@ -2,10 +2,10 @@
 
 ## Información del Curso y Equipo
 * **Curso:** CS 2031 Desarrollo Basado en Plataforma (DBP) - UTEC
-* **Integrantes del Equipo y Asignación de Tareas:**
-  * **Víctor Valentino Palomino Arcos** (Encargado de Seguridad, JWT, CORS e integración con AWS ECR/ECS)
-  * **Nestor Alonso De la Cruz Gomez** (Encargado de la Capa de Datos, JPA, Repositorios, ZXing QR y AWS S3)
-  * **Keneth Joseph Urbizagastegui Fernández** (Encargado de la lógica de negocio, Servicios, Eventos Asíncronos y Testing unitario/integrado con Testcontainers)
+* **Integrantes del Equipo:**
+  * Víctor Valentino Palomino Arcos
+  * Nestor Alonso De la Cruz Gomez
+  * Keneth Joseph Urbizagastegui Fernández
 
 ---
 
