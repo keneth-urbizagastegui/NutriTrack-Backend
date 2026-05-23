@@ -68,7 +68,7 @@ public class ConsumptionService {
         ConsumptionResponse response = consumptionMapper.toResponse(savedLog);
         response.setConsumedMacros(calculateMacros(batch.getProduct(), request.getQuantityGrams()));
 
-        return response;
+        return addLinks(response, batch.getId());
     }
 
     @Transactional(readOnly = true)
@@ -78,11 +78,33 @@ public class ConsumptionService {
 
         Page<ConsumptionLog> logs = consumptionLogRepository.findByUserId(user.getId(), pageable);
 
-        return logs.map(log -> {
-            ConsumptionResponse response = consumptionMapper.toResponse(log);
-            response.setConsumedMacros(calculateMacros(log.getBatch().getProduct(), log.getQuantityGrams()));
-            return response;
+        return logs.map(l -> {
+            ConsumptionResponse response = consumptionMapper.toResponse(l);
+            response.setConsumedMacros(calculateMacros(l.getBatch().getProduct(), l.getQuantityGrams()));
+            return addLinks(response, l.getBatch().getId());
         });
+    }
+
+    private ConsumptionResponse addLinks(ConsumptionResponse response, Long batchId) {
+        try {
+            String selfUrl = org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/api/v1/consumption")
+                    .toUriString();
+            String batchUrl = org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/api/v1/batches/{batchId}/traceability")
+                    .buildAndExpand(batchId)
+                    .toUriString();
+            response.set_links(java.util.Map.of(
+                    "self", java.util.Map.of("href", selfUrl),
+                    "batch", java.util.Map.of("href", batchUrl)
+            ));
+        } catch (Exception e) {
+            response.set_links(java.util.Map.of(
+                    "self", java.util.Map.of("href", "http://localhost:8080/api/v1/consumption"),
+                    "batch", java.util.Map.of("href", "http://localhost:8080/api/v1/batches/" + batchId + "/traceability")
+            ));
+        }
+        return response;
     }
 
     private MacrosDto calculateMacros(Product product, Integer quantityGrams) {

@@ -16,4 +16,5 @@ public class BatchResponse {
     private LocalDate expirationDate;
     private String qrCodeUrl;
     private BatchStatus status;
+    private java.util.Map<String, java.util.Map<String, String>> _links;
 }

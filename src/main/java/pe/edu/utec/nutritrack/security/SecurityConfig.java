@@ -40,6 +40,8 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                         .requestMatchers("/api/v1/batches/{id}/traceability").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/v1/products").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/v1/suppliers").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/v1/ingredients").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .anyRequest().authenticated()

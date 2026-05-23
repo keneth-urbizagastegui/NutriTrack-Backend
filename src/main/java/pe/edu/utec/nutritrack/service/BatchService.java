@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import pe.edu.utec.nutritrack.dto.request.BatchIngredientRequest;
 import pe.edu.utec.nutritrack.dto.request.BatchRequest;
+import pe.edu.utec.nutritrack.dto.response.BatchIngredientResponse;
 import pe.edu.utec.nutritrack.dto.response.BatchResponse;
 import pe.edu.utec.nutritrack.dto.response.TraceabilityCertificateResponse;
 import pe.edu.utec.nutritrack.dto.response.TraceabilityIngredientResponse;
@@ -12,14 +15,15 @@ import pe.edu.utec.nutritrack.dto.response.TraceabilityResponse;
 import pe.edu.utec.nutritrack.event.BatchRecallEvent;
 import pe.edu.utec.nutritrack.exception.InvalidBatchDateException;
 import pe.edu.utec.nutritrack.exception.ResourceNotFoundException;
+import pe.edu.utec.nutritrack.exception.SupplierNotActiveException;
 import pe.edu.utec.nutritrack.mapper.BatchMapper;
 import pe.edu.utec.nutritrack.model.*;
-import pe.edu.utec.nutritrack.repository.BatchRepository;
-import pe.edu.utec.nutritrack.repository.ProductRepository;
+import pe.edu.utec.nutritrack.repository.*;
 import pe.edu.utec.nutritrack.util.QrCodeGenerator;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +32,9 @@ public class BatchService {
 
     private final BatchRepository batchRepository;
     private final ProductRepository productRepository;
+    private final IngredientRepository ingredientRepository;
+    private final SupplierRepository supplierRepository;
+    private final BatchIngredientRepository batchIngredientRepository;
     private final BatchMapper batchMapper;
     private final QrCodeGenerator qrCodeGenerator;
     private final S3StorageService s3StorageService;
@@ -60,7 +67,7 @@ public class BatchService {
             savedBatch = batchRepository.save(savedBatch);
         }
 
-        return batchMapper.toResponse(savedBatch);
+        return addBatchLinks(batchMapper.toResponse(savedBatch));
     }
 
     @Transactional(readOnly = true)
@@ -124,5 +131,81 @@ public class BatchService {
         batchRepository.save(batch);
 
         eventPublisher.publishEvent(new BatchRecallEvent(this, batch));
+    }
+
+    @Transactional
+    public BatchIngredientResponse addIngredientToBatch(Long batchId, BatchIngredientRequest request) {
+        Batch batch = batchRepository.findById(batchId)
+                .orElseThrow(() -> new ResourceNotFoundException("El lote con ID " + batchId + " no existe."));
+        Ingredient ingredient = ingredientRepository.findById(request.getIngredientId())
+                .orElseThrow(() -> new ResourceNotFoundException("El ingrediente con ID " + request.getIngredientId() + " no existe."));
+        Supplier supplier = supplierRepository.findById(request.getSupplierId())
+                .orElseThrow(() -> new ResourceNotFoundException("El proveedor con ID " + request.getSupplierId() + " no existe."));
+
+        if (!Boolean.TRUE.equals(supplier.getIsActive())) {
+            throw new SupplierNotActiveException("El proveedor '" + supplier.getName() + "' no está activo.");
+        }
+
+        LocalDate today = LocalDate.now();
+        int shelfLife = ingredient.getShelfLifeDays();
+        LocalDate arrival = request.getArrivalDate();
+        LocalDate midExpiry = arrival.plusDays(shelfLife / 2);
+        LocalDate fullExpiry = arrival.plusDays(shelfLife);
+
+        FreshnessStatus freshness;
+        if (today.isBefore(midExpiry)) {
+            freshness = FreshnessStatus.FRESH;
+        } else if (today.isBefore(fullExpiry) || today.isEqual(fullExpiry)) {
+            freshness = FreshnessStatus.MATURING;
+        } else {
+            freshness = FreshnessStatus.EXPIRED;
+        }
+
+        BatchIngredient batchIngredient = BatchIngredient.builder()
+                .batch(batch)
+                .ingredient(ingredient)
+                .supplier(supplier)
+                .arrivalDate(arrival)
+                .freshnessStatus(freshness)
+                .build();
+
+        BatchIngredient saved = batchIngredientRepository.save(batchIngredient);
+
+        BatchIngredientResponse response = BatchIngredientResponse.builder()
+                .id(saved.getId())
+                .batchId(batch.getId())
+                .ingredientName(ingredient.getName())
+                .supplierName(supplier.getName())
+                .arrivalDate(saved.getArrivalDate())
+                .freshnessStatus(saved.getFreshnessStatus())
+                .build();
+
+        return addBatchIngredientLinks(response);
+    }
+
+    private BatchResponse addBatchLinks(BatchResponse response) {
+        try {
+            String selfUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/api/v1/batches/{id}/traceability")
+                    .buildAndExpand(response.getId())
+                    .toUriString();
+            response.set_links(Map.of("self", Map.of("href", selfUrl)));
+        } catch (Exception e) {
+            response.set_links(Map.of("self", Map.of("href", "http://localhost:8080/api/v1/batches/" + response.getId() + "/traceability")));
+        }
+        return response;
+    }
+
+    private BatchIngredientResponse addBatchIngredientLinks(BatchIngredientResponse response) {
+        try {
+            String selfUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/api/v1/batches/{batchId}/traceability")
+                    .buildAndExpand(response.getBatchId())
+                    .toUriString();
+            response.set_links(Map.of("self", Map.of("href", selfUrl)));
+        } catch (Exception e) {
+            response.set_links(Map.of("self", Map.of("href", "http://localhost:8080/api/v1/batches/" + response.getBatchId() + "/traceability")));
+        }
+        return response;
     }
 }

@@ -2,9 +2,10 @@
 
 ## Información del Curso y Equipo
 * **Curso:** CS 2031 Desarrollo Basado en Plataforma (DBP) - UTEC
-* **Integrantes del Equipo:**
-  * [Nombre Completo del Integrante 1]
-  * [Nombre Completo del Integrante 2]
+* **Integrantes del Equipo y Asignación de Tareas:**
+  * **Víctor Valentino Palomino Arcos** (Encargado de Seguridad, JWT, CORS e integración con AWS ECR/ECS)
+  * **Nestor Alonso De la Cruz Gomez** (Encargado de la Capa de Datos, JPA, Repositorios, ZXing QR y AWS S3)
+  * **Keneth Joseph Urbizagastegui Fernández** (Encargado de la lógica de negocio, Servicios, Eventos Asíncronos y Testing unitario/integrado con Testcontainers)
 
 ---
 
@@ -181,6 +182,19 @@ El sistema está diseñado para operar de forma nativa en la nube (Cloud-Native)
 ### Consumos (`/api/v1/consumptions`)
 * `POST /`: Registro de consumo diario de un alimento.
 * `GET /user`: Obtiene el historial de consumo del usuario autenticado.
+
+### Proveedores (`/api/v1/suppliers`)
+* `POST /`: Creación de un proveedor (Solo Admin/Manager).
+* `GET /`: Listado paginado de todos los proveedores (Acceso público).
+* `GET /{id}`: Obtener el detalle de un proveedor por su ID (Autenticado).
+
+### Ingredientes (`/api/v1/ingredients`)
+* `POST /`: Creación de un ingrediente (Solo Admin/Manager).
+* `GET /`: Listado paginado de todos los ingredientes (Acceso público).
+* `GET /{id}`: Obtener el detalle de un ingrediente por su ID (Autenticado).
+
+### Asociación de Ingredientes (`/api/v1/batches`)
+* `POST /{batchId}/ingredients`: Asocia un ingrediente y un proveedor a un lote con fecha de llegada y calcula su estado de frescura (Solo Admin/Manager).
 
 ---
 

@@ -6,7 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import pe.edu.utec.nutritrack.dto.request.BatchIngredientRequest;
 import pe.edu.utec.nutritrack.dto.request.QualityReportRequest;
+import pe.edu.utec.nutritrack.dto.response.BatchIngredientResponse;
 import pe.edu.utec.nutritrack.dto.response.QualityReportResponse;
 import pe.edu.utec.nutritrack.dto.response.TraceabilityResponse;
 import pe.edu.utec.nutritrack.service.BatchService;
@@ -44,5 +46,15 @@ public class BatchController {
     public ResponseEntity<Void> recallBatch(@PathVariable Long id) {
         batchService.recallBatch(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{batchId}/ingredients")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER')")
+    public ResponseEntity<BatchIngredientResponse> addIngredientToBatch(
+            @PathVariable Long batchId,
+            @Valid @RequestBody BatchIngredientRequest request
+    ) {
+        BatchIngredientResponse response = batchService.addIngredientToBatch(batchId, request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.utec.nutritrack.dto.request.LoginRequest;
 import pe.edu.utec.nutritrack.dto.request.RegisterRequest;
+import pe.edu.utec.nutritrack.dto.request.RefreshTokenRequest;
 import pe.edu.utec.nutritrack.dto.response.LoginResponse;
 import pe.edu.utec.nutritrack.dto.response.RegisterResponse;
 import pe.edu.utec.nutritrack.service.AuthService;
@@ -27,6 +28,12 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         LoginResponse response = authService.login(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<LoginResponse> refresh(@Valid @RequestBody RefreshTokenRequest request) {
+        LoginResponse response = authService.refresh(request);
         return ResponseEntity.ok(response);
     }
 }

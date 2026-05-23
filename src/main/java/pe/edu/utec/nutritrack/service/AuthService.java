@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pe.edu.utec.nutritrack.dto.request.LoginRequest;
 import pe.edu.utec.nutritrack.dto.request.RegisterRequest;
+import pe.edu.utec.nutritrack.dto.request.RefreshTokenRequest;
 import pe.edu.utec.nutritrack.dto.response.LoginResponse;
 import pe.edu.utec.nutritrack.dto.response.RegisterResponse;
 import pe.edu.utec.nutritrack.exception.InvalidCredentialsException;
@@ -85,6 +86,31 @@ public class AuthService {
         return LoginResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .expiresIn(3600000L) // 1 hour
+                .tokenType("Bearer")
+                .build();
+    }
+
+    public LoginResponse refresh(RefreshTokenRequest request) {
+        String refreshToken = request.getRefreshToken();
+        String username;
+        try {
+            username = jwtService.extractUsername(refreshToken);
+        } catch (Exception e) {
+            throw new InvalidCredentialsException("Token de actualización inválido.");
+        }
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        if (!jwtService.isTokenValid(refreshToken, userDetails)) {
+            throw new InvalidCredentialsException("Token de actualización inválido o expirado.");
+        }
+
+        String newAccessToken = jwtService.generateToken(userDetails);
+        String newRefreshToken = jwtService.generateRefreshToken(userDetails);
+
+        return LoginResponse.builder()
+                .accessToken(newAccessToken)
+                .refreshToken(newRefreshToken)
                 .expiresIn(3600000L) // 1 hour
                 .tokenType("Bearer")
                 .build();
