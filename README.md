@@ -264,7 +264,7 @@ Se centralizó la gestión de excepciones de forma global mediante [GlobalExcept
   * **Víctor Valentino Palomino Arcos** (Seguridad JWT, CORS, Dockerización, despliegues y CI/CD).
   * **Nestor Alonso De la Cruz Gomez** (Capa de datos, entidades, almacenamiento S3 y códigos QR).
   * **Keneth Joseph Urbizagastegui Fernández** (Lógica de negocio, controladores, eventos asíncronos y testing).
-* Se simularon revisiones y aprobaciones de código en los comentarios de los Issues antes de cerrarse e integrarse a la rama `main`.
+* Se realizaron revisiones y aprobaciones de código en los comentarios de los Issues antes de cerrarse e integrarse a la rama `main`.
 
 ### Pipeline CI/CD con GitHub Actions
 * Configurado en [deploy-backend.yml](file:///c:/Users/josek/OneDrive/Desktop/Proyecto%20DBP/NutriTrack/.github/workflows/deploy-backend.yml).
