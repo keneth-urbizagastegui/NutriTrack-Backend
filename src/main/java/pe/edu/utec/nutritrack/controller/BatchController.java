@@ -9,12 +9,14 @@ import org.springframework.web.bind.annotation.*;
 import pe.edu.utec.nutritrack.dto.request.BatchIngredientRequest;
 import pe.edu.utec.nutritrack.dto.request.QualityReportRequest;
 import pe.edu.utec.nutritrack.dto.response.BatchIngredientResponse;
+import pe.edu.utec.nutritrack.dto.response.BatchResponse;
 import pe.edu.utec.nutritrack.dto.response.QualityReportResponse;
 import pe.edu.utec.nutritrack.dto.response.TraceabilityResponse;
 import pe.edu.utec.nutritrack.service.BatchService;
 import pe.edu.utec.nutritrack.service.QualityReportService;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/batches")
@@ -28,6 +30,11 @@ public class BatchController {
     public ResponseEntity<TraceabilityResponse> getTraceability(@PathVariable Long id) {
         TraceabilityResponse response = batchService.getTraceability(id);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<BatchResponse>> getActiveBatches() {
+        return ResponseEntity.ok(batchService.getActiveBatches());
     }
 
     @PostMapping("/{batchId}/quality-reports")

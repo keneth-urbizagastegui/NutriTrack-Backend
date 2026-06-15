@@ -183,6 +183,21 @@ public class BatchService {
         return addBatchIngredientLinks(response);
     }
 
+    @Transactional(readOnly = true)
+    public List<BatchResponse> getActiveBatches() {
+        return batchRepository.findAll().stream()
+                .filter(b -> b.getStatus() == BatchStatus.ACTIVE)
+                .map(batch -> {
+                    BatchResponse res = batchMapper.toResponse(batch);
+                    if (batch.getProduct() != null) {
+                        res.setProductName(batch.getProduct().getName());
+                        res.setProductId(batch.getProduct().getId());
+                    }
+                    return addBatchLinks(res);
+                })
+                .collect(Collectors.toList());
+    }
+
     private BatchResponse addBatchLinks(BatchResponse response) {
         try {
             String selfUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
