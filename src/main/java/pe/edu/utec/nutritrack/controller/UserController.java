@@ -27,4 +27,14 @@ public class UserController {
         userService.addAllergen(principal.getName(), request);
         return ResponseEntity.ok(Map.of("message", "Ingrediente marcado como alérgeno correctamente"));
     }
+
+    @DeleteMapping("/allergens/{ingredientId}")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public ResponseEntity<Map<String, String>> removeAllergen(
+            @PathVariable Long ingredientId,
+            Principal principal
+    ) {
+        userService.removeAllergen(principal.getName(), ingredientId);
+        return ResponseEntity.ok(Map.of("message", "Ingrediente removido como alérgeno correctamente"));
+    }
 }

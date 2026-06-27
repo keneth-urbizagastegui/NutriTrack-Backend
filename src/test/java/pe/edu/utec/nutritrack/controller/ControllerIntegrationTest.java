@@ -79,6 +79,17 @@ class ControllerIntegrationTest {
         return httpClient.send(builder.build(), HttpResponse.BodyHandlers.ofString());
     }
 
+    private HttpResponse<String> delete(String path, String token) throws Exception {
+        HttpRequest.Builder builder = HttpRequest.newBuilder()
+                .uri(URI.create(baseUrl() + path))
+                .header("Content-Type", "application/json")
+                .DELETE();
+        if (token != null) {
+            builder.header("Authorization", "Bearer " + token);
+        }
+        return httpClient.send(builder.build(), HttpResponse.BodyHandlers.ofString());
+    }
+
     private String registerAndLogin(String username, String email, String password) throws Exception {
         // Register
         RegisterRequest reg = RegisterRequest.builder()
@@ -372,5 +383,10 @@ class ControllerIntegrationTest {
         HttpResponse<String> allergenRes = post("/api/v1/users/allergens", allergenBody, userToken);
         assertThat(allergenRes.statusCode()).isEqualTo(200);
         assertThat(allergenRes.body()).contains("correctamente");
+
+        // 7. User removes peanut as allergen
+        HttpResponse<String> removeAllergenRes = delete("/api/v1/users/allergens/" + peanutDto.getId(), userToken);
+        assertThat(removeAllergenRes.statusCode()).isEqualTo(200);
+        assertThat(removeAllergenRes.body()).contains("removido");
     }
 }

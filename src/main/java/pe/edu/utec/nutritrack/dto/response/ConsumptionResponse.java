@@ -14,5 +14,6 @@ public class ConsumptionResponse {
     private Integer quantityGrams;
     private java.time.LocalDateTime consumptionDate;
     private MacrosDto consumedMacros;
+    private Long batchId;
     private java.util.Map<String, java.util.Map<String, String>> _links;
 }

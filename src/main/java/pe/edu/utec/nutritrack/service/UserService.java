@@ -28,4 +28,16 @@ public class UserService {
         user.getAllergens().add(ingredient);
         userRepository.save(user);
     }
+
+    @Transactional
+    public void removeAllergen(String username, Long ingredientId) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con el nombre: " + username));
+
+        Ingredient ingredient = ingredientRepository.findById(ingredientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Ingrediente no encontrado con el ID: " + ingredientId));
+
+        user.getAllergens().remove(ingredient);
+        userRepository.save(user);
+    }
 }
