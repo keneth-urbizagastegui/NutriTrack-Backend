@@ -64,4 +64,10 @@ public class BatchController {
         BatchIngredientResponse response = batchService.addIngredientToBatch(batchId, request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
+    @GetMapping("/quality-reports")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER')")
+    public ResponseEntity<List<QualityReportResponse>> getAllReports() {
+        return ResponseEntity.ok(qualityReportService.getAllReports());
+    }
 }

@@ -14,4 +14,9 @@ public class QualityReportResponse {
     private String batchNumber;
     private QualityReportStatus status;
     private LocalDateTime reportDate;
+    private String title;
+    private String description;
+    private Long batchId;
+    private String productName;
+    private String userName;
 }

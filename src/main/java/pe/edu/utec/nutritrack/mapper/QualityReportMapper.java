@@ -10,5 +10,8 @@ public interface QualityReportMapper {
 
     @Mapping(target = "reportId", source = "id")
     @Mapping(target = "batchNumber", source = "batch.batchNumber")
+    @Mapping(target = "batchId", source = "batch.id")
+    @Mapping(target = "productName", source = "batch.product.name")
+    @Mapping(target = "userName", source = "user.username")
     QualityReportResponse toResponse(QualityReport report);
 }

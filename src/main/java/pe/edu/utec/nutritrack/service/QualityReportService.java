@@ -18,6 +18,8 @@ import pe.edu.utec.nutritrack.repository.QualityReportRepository;
 import pe.edu.utec.nutritrack.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -51,5 +53,12 @@ public class QualityReportService {
         eventPublisher.publishEvent(new QualityReportCreatedEvent(this, savedReport));
 
         return qualityReportMapper.toResponse(savedReport);
+    }
+
+    @Transactional(readOnly = true)
+    public List<QualityReportResponse> getAllReports() {
+        return qualityReportRepository.findAll().stream()
+                .map(qualityReportMapper::toResponse)
+                .collect(Collectors.toList());
     }
 }
