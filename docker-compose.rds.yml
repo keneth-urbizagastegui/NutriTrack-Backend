@@ -1,0 +1,31 @@
+version: "3.9"
+
+# Variante para cuando la base de datos YA existe en AWS RDS
+# (no levanta Postgres local, conecta directo al RDS real).
+#
+# Uso:
+#   1. Asegúrate de tener tu .env en esta misma carpeta con DB_URL
+#      apuntando a tu endpoint de RDS.
+#   2. docker compose -f docker-compose.rds.yml up --build
+#   3. Backend disponible en http://localhost:8080
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nutritrack-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN}
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
