@@ -64,8 +64,16 @@ public class BatchService {
             savedBatch.setQrCodeUrl(qrUrl);
             savedBatch = batchRepository.save(savedBatch);
         } catch (Exception e) {
-            savedBatch.setQrCodeUrl("https://nutritrack-certificates.s3.amazonaws.com/qrs/" + savedBatch.getBatchNumber() + ".png");
-            savedBatch = batchRepository.save(savedBatch);
+            try {
+                String traceabilityUrl = "https://nutritrack.app/traceability/" + savedBatch.getId();
+                byte[] qrBytes = qrCodeGenerator.generateQrCodeImage(traceabilityUrl, 300, 300);
+                String base64Qr = "data:image/png;base64," + java.util.Base64.getEncoder().encodeToString(qrBytes);
+                savedBatch.setQrCodeUrl(base64Qr);
+                savedBatch = batchRepository.save(savedBatch);
+            } catch (Exception ex) {
+                savedBatch.setQrCodeUrl("https://nutritrack-certificates.s3.amazonaws.com/qrs/" + savedBatch.getBatchNumber() + ".png");
+                savedBatch = batchRepository.save(savedBatch);
+            }
         }
 
         return addBatchLinks(batchMapper.toResponse(savedBatch));
