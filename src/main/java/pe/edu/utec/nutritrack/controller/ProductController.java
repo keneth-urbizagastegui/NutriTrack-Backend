@@ -50,6 +50,12 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long productId) {
+        ProductResponse response = productService.getProductById(productId);
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/{productId}/batches")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<BatchResponse> createBatch(
