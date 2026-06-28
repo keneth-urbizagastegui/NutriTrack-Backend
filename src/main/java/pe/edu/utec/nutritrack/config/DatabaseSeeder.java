@@ -273,18 +273,28 @@ public class DatabaseSeeder implements CommandLineRunner {
             userRepository.save(regularUser);
         }
 
-        // Sembrar alérgenos preestablecidos para victor.fitness
+        // Limpieza y estandarización (iniciar desde cero)
+        System.out.println("Estandarizando base de datos para inicio limpio...");
+        consumptionLogRepository.deleteAll();
+
+        // Eliminar todos los usuarios excepto los predeterminados
+        List<User> allUsers = userRepository.findAll();
+        for (User u : allUsers) {
+            if (!u.getUsername().equals("admin") 
+                    && !u.getUsername().equals("manager") 
+                    && !u.getUsername().equals("victor.fitness")) {
+                System.out.println("Eliminando usuario no predeterminado de la semilla: " + u.getUsername());
+                u.getAllergens().clear();
+                userRepository.save(u);
+                userRepository.delete(u);
+            }
+        }
+
+        // Limpiar alérgenos de victor.fitness para empezar de cero
         regularUser = userRepository.findByUsername("victor.fitness").orElse(null);
-        if (regularUser != null && regularUser.getAllergens().isEmpty()) {
-            System.out.println("Sembrando alérgenos para victor.fitness...");
-            Ingredient suero = ingredientRepository.findAll().stream()
-                    .filter(i -> i.getName().contains("Suero"))
-                    .findFirst().orElse(null);
-            Ingredient peanut = ingredientRepository.findAll().stream()
-                    .filter(i -> i.getName().contains("Pasta de Maní"))
-                    .findFirst().orElse(null);
-            if (suero != null) regularUser.getAllergens().add(suero);
-            if (peanut != null) regularUser.getAllergens().add(peanut);
+        if (regularUser != null) {
+            System.out.println("Limpiando alérgenos de victor.fitness para empezar de cero...");
+            regularUser.getAllergens().clear();
             userRepository.save(regularUser);
         }
 
