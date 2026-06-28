@@ -107,6 +107,9 @@ public class BatchService {
                             .supplierName(bi.getSupplier().getName())
                             .arrivalDate(arrival)
                             .freshness(freshness)
+                            .latitude(bi.getSupplier().getLatitude())
+                            .longitude(bi.getSupplier().getLongitude())
+                            .supplierAddress(bi.getSupplier().getAddress())
                             .build();
                 })
                 .collect(Collectors.toList());

@@ -14,4 +14,7 @@ public class TraceabilityIngredientResponse {
     private String supplierName;
     private LocalDate arrivalDate;
     private FreshnessStatus freshness;
+    private Double latitude;
+    private Double longitude;
+    private String supplierAddress;
 }
