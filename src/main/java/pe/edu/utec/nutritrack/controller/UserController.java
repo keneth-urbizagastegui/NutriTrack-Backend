@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.utec.nutritrack.dto.request.AllergenRequest;
+import pe.edu.utec.nutritrack.dto.response.UserProfileResponse;
 import pe.edu.utec.nutritrack.service.UserService;
 
 import java.security.Principal;
@@ -44,5 +45,11 @@ public class UserController {
     ) {
         userService.removeAllergen(principal.getName(), ingredientId);
         return ResponseEntity.ok(Map.of("message", "Ingrediente removido como alérgeno correctamente"));
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public ResponseEntity<UserProfileResponse> getCurrentUser(Principal principal) {
+        return ResponseEntity.ok(userService.getUserProfile(principal.getName()));
     }
 }

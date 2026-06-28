@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pe.edu.utec.nutritrack.dto.request.AllergenRequest;
+import pe.edu.utec.nutritrack.dto.response.IngredientResponse;
+import pe.edu.utec.nutritrack.dto.response.UserProfileResponse;
 import pe.edu.utec.nutritrack.exception.ResourceNotFoundException;
 import pe.edu.utec.nutritrack.model.Ingredient;
 import pe.edu.utec.nutritrack.model.User;
@@ -61,5 +63,28 @@ public class UserService {
                 userRepository.save(user);
             }
         );
+    }
+
+    @Transactional(readOnly = true)
+    public UserProfileResponse getUserProfile(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con el nombre: " + username));
+
+        List<IngredientResponse> allergens = user.getAllergens().stream()
+                .map(i -> IngredientResponse.builder()
+                        .id(i.getId())
+                        .name(i.getName())
+                        .description(i.getDescription())
+                        .shelfLifeDays(i.getShelfLifeDays())
+                        .build())
+                .collect(Collectors.toList());
+
+        return UserProfileResponse.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .roles(user.getRoles())
+                .allergens(allergens)
+                .build();
     }
 }
