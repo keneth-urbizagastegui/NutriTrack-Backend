@@ -11,12 +11,20 @@ import pe.edu.utec.nutritrack.service.UserService;
 import java.security.Principal;
 import java.util.Map;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
+
+    @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<List<pe.edu.utec.nutritrack.dto.response.UserAuditResponse>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
 
     @PostMapping("/allergens")
     @PreAuthorize("hasAuthority('ROLE_USER')")
