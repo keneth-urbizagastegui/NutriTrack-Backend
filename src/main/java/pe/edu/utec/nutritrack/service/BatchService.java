@@ -39,6 +39,7 @@ public class BatchService {
     private final QrCodeGenerator qrCodeGenerator;
     private final S3StorageService s3StorageService;
     private final ApplicationEventPublisher eventPublisher;
+    private final QualityReportRepository qualityReportRepository;
 
     @Transactional
     public BatchResponse createBatch(Long productId, BatchRequest request) {
@@ -129,6 +130,13 @@ public class BatchService {
 
         batch.setStatus(BatchStatus.RECALLED);
         batchRepository.save(batch);
+
+        // Actualizar todos los reportes de calidad relacionados con este lote a RECALLED_BATCH
+        List<QualityReport> reports = qualityReportRepository.findByBatchId(batchId);
+        for (QualityReport report : reports) {
+            report.setStatus(QualityReportStatus.RECALLED_BATCH);
+        }
+        qualityReportRepository.saveAll(reports);
 
         eventPublisher.publishEvent(new BatchRecallEvent(this, batch));
     }

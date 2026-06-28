@@ -25,4 +25,13 @@ public class Supplier {
     @Column(name = "is_active", nullable = false)
     @Builder.Default
     private Boolean isActive = true;
+
+    @Column(length = 255)
+    private String address;
+
+    @Column
+    private Double latitude;
+
+    @Column
+    private Double longitude;
 }

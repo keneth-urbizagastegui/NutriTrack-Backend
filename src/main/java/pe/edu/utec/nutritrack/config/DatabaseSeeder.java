@@ -69,16 +69,16 @@ public class DatabaseSeeder implements CommandLineRunner {
         // 1. Sembrar Proveedores Homologados si está vacío
         if (supplierRepository.count() == 0) {
             System.out.println("Sembrando proveedores peruanos...");
-            Supplier sup1 = Supplier.builder().name("Montana S.A.").contactEmail("contacto@montana.com.pe").isActive(true).build();
-            Supplier sup2 = Supplier.builder().name("Ecoandino S.A.C.").contactEmail("ventas@ecoandino.com.pe").isActive(true).build();
-            Supplier sup3 = Supplier.builder().name("Química Suiza Industrial (QSI)").contactEmail("contacto@qsi.com.pe").isActive(true).build();
-            Supplier sup4 = Supplier.builder().name("Frutarom Perú S.A. (IFF)").contactEmail("ventas@frutarom.com.pe").isActive(true).build();
-            Supplier sup5 = Supplier.builder().name("Alicorp Soluciones").contactEmail("logistica@alicorp.com.pe").isActive(true).build();
-            Supplier sup6 = Supplier.builder().name("Lácteos del Sur S.A. (Gloria)").contactEmail("contacto@gloria.com.pe").isActive(true).build();
-            Supplier sup7 = Supplier.builder().name("Molitalia S.A.").contactEmail("ventas@molitalia.com.pe").isActive(true).build();
-            Supplier sup8 = Supplier.builder().name("Aicacolor S.A.C.").contactEmail("info@aicacolor.com.pe").isActive(true).build();
-            Supplier sup9 = Supplier.builder().name("Inversiones Argos Natural S.A.C.").contactEmail("ventas@argosnatural.com").isActive(true).build();
-            Supplier sup10 = Supplier.builder().name("Procesadora Industrial Río Seco S.A.C.").contactEmail("contacto@rioseco.com.pe").isActive(true).build();
+            Supplier sup1 = Supplier.builder().name("Montana S.A.").contactEmail("contacto@montana.com.pe").isActive(true).address("Av. Javier Prado Este 6210, La Molina, Lima").latitude(-12.0655).longitude(-76.9535).build();
+            Supplier sup2 = Supplier.builder().name("Ecoandino S.A.C.").contactEmail("ventas@ecoandino.com.pe").isActive(true).address("Av. El Santuario 1120, San Juan de Lurigancho, Lima").latitude(-12.0084).longitude(-77.0012).build();
+            Supplier sup3 = Supplier.builder().name("Química Suiza Industrial (QSI)").contactEmail("contacto@qsi.com.pe").isActive(true).address("Av. República de Panamá 2577, La Victoria, Lima").latitude(-12.0831).longitude(-77.0229).build();
+            Supplier sup4 = Supplier.builder().name("Frutarom Perú S.A. (IFF)").contactEmail("ventas@frutarom.com.pe").isActive(true).address("Calle Manuel Angosto 783, Cercado de Lima, Lima").latitude(-12.0465).longitude(-77.0620).build();
+            Supplier sup5 = Supplier.builder().name("Alicorp Soluciones").contactEmail("logistica@alicorp.com.pe").isActive(true).address("Av. Argentina 4793, Carmen de la Legua, Callao").latitude(-12.0461).longitude(-77.0853).build();
+            Supplier sup6 = Supplier.builder().name("Lácteos del Sur S.A. (Gloria)").contactEmail("contacto@gloria.com.pe").isActive(true).address("Av. República de Panamá 2461, La Victoria, Lima").latitude(-12.0820).longitude(-77.0232).build();
+            Supplier sup7 = Supplier.builder().name("Molitalia S.A.").contactEmail("ventas@molitalia.com.pe").isActive(true).address("Av. Universitaria 608, Cercado de Lima, Lima").latitude(-12.0594).longitude(-77.0782).build();
+            Supplier sup8 = Supplier.builder().name("Aicacolor S.A.C.").contactEmail("info@aicacolor.com.pe").isActive(true).address("Jr. Huallaga 450, Cercado de Lima, Lima").latitude(-12.0483).longitude(-77.0278).build();
+            Supplier sup9 = Supplier.builder().name("Inversiones Argos Natural S.A.C.").contactEmail("ventas@argosnatural.com").isActive(true).address("Av. La Marina 2340, San Miguel, Lima").latitude(-12.0784).longitude(-77.0895).build();
+            Supplier sup10 = Supplier.builder().name("Procesadora Industrial Río Seco S.A.C.").contactEmail("contacto@rioseco.com.pe").isActive(true).address("Av. Los Pinos 450, Lurín, Lima").latitude(-12.2745).longitude(-76.8732).build();
 
             supplierRepository.saveAll(List.of(sup1, sup2, sup3, sup4, sup5, sup6, sup7, sup8, sup9, sup10));
         }

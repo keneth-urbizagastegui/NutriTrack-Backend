@@ -23,4 +23,11 @@ public class SupplierRequest {
 
     @NotNull(message = "El estado activo es obligatorio")
     private Boolean isActive;
+
+    @Size(max = 255, message = "La dirección no puede superar los 255 caracteres")
+    private String address;
+
+    private Double latitude;
+
+    private Double longitude;
 }
